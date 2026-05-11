@@ -1,0 +1,20 @@
+[project]
+name = "coser-fastapi"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standart]",
+    "sqlalchemy[asyncio]",
+    "asyncpg",
+    "alembic",
+    "pydantic-settings",
+    "python-jose[cryptography]",
+    "passlib[bcrypt]"
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "httpx"
+]

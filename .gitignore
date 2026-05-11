@@ -1,0 +1,28 @@
+# Environment
+.env
+.env.local
+
+# Docker
+docker-compose.yml
+
+# Claude
+CLAUDE.md
+.claude/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+dist/
+build/
+*.egg-info/
+
+# IDE
+.idea/
+.vscode/
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
