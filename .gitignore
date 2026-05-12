@@ -9,6 +9,9 @@ docker-compose.yml
 CLAUDE.md
 .claude/
 
+# Docs
+docs/
+
 # Python
 __pycache__/
 *.py[cod]
