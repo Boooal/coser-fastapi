@@ -10,7 +10,7 @@ from app.core.dependencies import get_db
 router = APIRouter(prefix="/api/v1", tags=["auth"])
 
 
-@router.post("/login", response_model=TokenResponse)
+@router.post("/login")
 async def login_handler(data: LoginRequest, db: AsyncSession = Depends(get_db)) -> OkResponse[TokenResponse]:
     token = await login(db, data.phone, data.password)
     if token is None:
