@@ -3,6 +3,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from app.auth.router import router as auth_router
+from app.companies.router import router as companies_router
 from app.core.exceptions import AppException, ErrorCode
 from app.core.schemas import ErrorDetail, ErrorResponse
 from app.users.router import router as users_router
@@ -42,3 +43,4 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 app.include_router(auth_router)
 app.include_router(users_router)
+app.include_router(companies_router)
