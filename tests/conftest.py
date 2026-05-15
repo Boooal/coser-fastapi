@@ -52,3 +52,26 @@ async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient]:
         yield c
 
     app.dependency_overrides.clear()
+
+
+@pytest_asyncio.fixture
+async def authed_user(client: AsyncClient) -> dict[str, str | dict[str, str]]:
+    payload = {
+        "phone": "+79001234567",
+        "password": "secret123",
+        "first_name": "Ivan",
+        "last_name": "Petrov",
+    }
+    register = await client.post("/api/v1/registerUser", json=payload)
+    user_id = register.json()["result"]["id"]
+
+    login = await client.post(
+        "/api/v1/login",
+        json={"phone": payload["phone"], "password": payload["password"]},
+    )
+    token = login.json()["result"]["access_token"]
+
+    return {
+        "user_id": user_id,
+        "headers": {"Authorization": f"Bearer {token}"},
+    }
