@@ -4,9 +4,9 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.companies.models import Company
-from app.companies.schemas import CompanyCreate, CompanyUpdate
+from app.companies.schemas import CompanyCreate, CompanyMembership, CompanyUpdate
 from app.core.exceptions import AppException, ErrorCode
-from app.users.models import User, UserRole, Role
+from app.users.models import Role, User, UserRole
 
 
 async def create_company(db: AsyncSession, user: User, data: CompanyCreate) -> Company:
@@ -39,3 +39,26 @@ async def update_company(db: AsyncSession, company_id: UUID, data: CompanyUpdate
     await db.commit()
     await db.refresh(company)
     return company
+
+
+async def get_user_memberships(db: AsyncSession, user_id: UUID) -> list[CompanyMembership]:
+    stmt = (
+        select(Company.id, Company.name, Company.is_active, UserRole.role)
+        .join(UserRole, UserRole.company_id == Company.id)
+        .where(UserRole.user_id == user_id)
+        .order_by(Company.name)
+    )
+    result = await db.execute(stmt)
+
+    grouped: dict[UUID, dict] = {}
+    for company_id, name, is_active, role in result.all():
+        if company_id not in grouped:
+            grouped[company_id] = {
+                "id": company_id,
+                "name": name,
+                "is_active": is_active,
+                "roles": []
+            }
+        grouped[company_id]["roles"].append(role)
+
+    return [CompanyMembership(**data) for data in grouped.values()]

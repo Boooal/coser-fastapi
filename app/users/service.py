@@ -1,10 +1,11 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.companies.service import get_user_memberships
 from app.core.exceptions import AppException, ErrorCode
 from app.core.security import hash_password
 from app.users.models import User
-from app.users.schemas import UserCreate
+from app.users.schemas import MeResponse, UserCreate
 
 
 async def create_user(db: AsyncSession, data: UserCreate) -> User:
@@ -22,3 +23,17 @@ async def create_user(db: AsyncSession, data: UserCreate) -> User:
     await db.commit()
     await db.refresh(user)
     return user
+
+
+async def get_me(db: AsyncSession, user: User) -> MeResponse:
+    memberships = await get_user_memberships(db, user.id)
+    return MeResponse(
+        id=user.id,
+        phone=user.phone,
+        email=user.email,
+        first_name=user.first_name,
+        last_name=user.last_name,
+        avatar=user.avatar,
+        active_company_id=user.active_company_id,
+        companies=memberships,
+    )

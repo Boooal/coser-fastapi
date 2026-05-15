@@ -1,5 +1,8 @@
 from uuid import UUID
+
 from pydantic import BaseModel, Field
+
+from app.users.models import Role
 
 
 class CompanyCreate(BaseModel):
@@ -17,3 +20,10 @@ class CompanyResponse(BaseModel):
     is_active: bool
 
     model_config = {"from_attributes": True}
+
+
+class CompanyMembership(BaseModel):
+    id: UUID
+    name: str
+    is_active: bool
+    roles: list[Role]

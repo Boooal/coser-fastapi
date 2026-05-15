@@ -4,9 +4,9 @@ from fastapi import APIRouter
 from fastapi.params import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.companies.schemas import CompanyCreate, CompanyResponse, CompanyUpdate
-from app.companies.service import create_company, get_company, update_company
-from app.core.dependencies import get_db, get_current_user, get_company_id
+from app.companies.schemas import CompanyCreate, CompanyMembership, CompanyResponse, CompanyUpdate
+from app.companies.service import create_company, get_company, get_user_memberships, update_company
+from app.core.dependencies import get_company_id, get_current_user, get_db
 from app.core.schemas import OkResponse
 from app.users.models import User
 
@@ -40,3 +40,14 @@ async def update_company_handler(
 ) -> OkResponse[CompanyResponse]:
     company = await update_company(db, company_id, data)
     return OkResponse(result=CompanyResponse.model_validate(company))
+
+
+@router.post("/getMyCompanies")
+async def get_my_companies_handler(
+        db: AsyncSession = Depends(get_db),
+        current_user: User = Depends(get_current_user),
+) -> OkResponse[list[CompanyMembership]]:
+    memberships = await get_user_memberships(db, current_user.id)
+    return OkResponse(result=memberships)
+
+
