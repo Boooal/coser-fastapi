@@ -12,10 +12,10 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+import app.companies.models  # noqa: F401
+import app.users.models  # noqa: F401
 from app.core.config import settings
 from app.db.base import Base
-import app.users.models  # noqa: F401
-import app.companies.models  # noqa: F401
 
 target_metadata = Base.metadata
 

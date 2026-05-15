@@ -2,8 +2,9 @@ from datetime import datetime
 from enum import StrEnum
 from uuid import UUID
 
+from sqlalchemy import Boolean, DateTime, ForeignKey, String, UniqueConstraint
+from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String, Boolean, DateTime, UniqueConstraint, ForeignKey, Enum as SQLEnum
 
 from app.db.base_model import BaseModel
 

@@ -1,8 +1,4 @@
-from typing import Generic, TypeVar
-
 from pydantic import BaseModel
-
-T = TypeVar("T")
 
 
 class ErrorDetail(BaseModel):
@@ -11,7 +7,7 @@ class ErrorDetail(BaseModel):
     fields: dict[str, list[str]] | None = None
 
 
-class OkResponse(BaseModel, Generic[T]):
+class OkResponse[T](BaseModel):
     ok: bool = True
     result: T
 
